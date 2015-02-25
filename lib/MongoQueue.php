@@ -178,7 +178,7 @@ abstract class MongoQueue
 		if ($connection == null)
 			throw new Exception("BaseMongoRecord::connection must be initialized to a valid Mongo object");
 		
-		if (!$connection->connected)
+		if (!self::isConnected())
 			$connection->connect();
 
 		return $connection->selectDB(self::$database);
@@ -196,7 +196,7 @@ abstract class MongoQueue
 			throw new Exception("BaseMongoRecord::connection must be initialized to a valid Mongo object");
 		
 		
-		if (!$connection->connected)
+		if (!$connection->is)
 			$connection->connect();
 
 		return $connection->selectCollection(self::$database, $collection_name);
@@ -217,5 +217,18 @@ abstract class MongoQueue
 
 			self::$environmentLoaded = true;
 		}
+	}
+
+	private static function isConnected(){
+
+		if (!(self::$connection instanceof \MongoClient || self::$connection instanceof \Mongo)) {
+            return false;
+        }
+        /* MongoClient::$connected is deprecated in 1.5.0+
+         */
+        return version_compare(phpversion('mongo'), '1.5.0', '<')
+            ? self::$connection
+            : count(self::$connection->getHosts()) > 0;
+
 	}
 }
