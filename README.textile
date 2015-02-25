@@ -60,6 +60,8 @@ h3. Running the jobs
 
 Jobs are run via @MongoQueue::run()@. Before running job, you'll need to set two extra MongoQueue initializers: @environment@ and, optionally, @context@. MongoQueue currently does not include a daemon runner, but here is an example runner:
 
+h4. Mongo class deprecated in php 1.3.0. Use MongoClient.
+
 <pre>
  $mongo = new Mongo('mongodb://host:port', array('connect' => false));
  MongoQueue::$connection = $mongo;
